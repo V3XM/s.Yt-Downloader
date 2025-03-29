@@ -10,19 +10,14 @@ type_choice = st.radio("Select Download Type:", ["Video", "Playlist"])
 # 🔗 إدخال رابط الفيديو أو قائمة التشغيل
 url = st.text_input("Enter YouTube URL:")
 
-# 🔘 اختيار تحميل الفيديو أو الصوت فقط
-download_type = st.radio("Download as:", ["Video (MP4)", "Audio (MP3)"])
-
 # ⏬ زر التحميل
 if st.button("Download"):
     if url:
         try:
             options = {}
+
             if type_choice == "Video":
-                if download_type == "Video (MP4)":
-                    options = {'format': 'bestvideo+bestaudio/best'}
-                else:
-                    options = {'format': 'bestaudio/best', 'postprocessors': [{'key': 'FFmpegExtractAudio', 'preferredcodec': 'mp3', 'preferredquality': '192'}]}
+                options = {'format': 'bestvideo+bestaudio/best'}  # تحميل الفيديو فقط
 
             elif type_choice == "Playlist":
                 options = {
@@ -31,7 +26,6 @@ if st.button("Download"):
                     'outtmpl': '%(playlist_index)s - %(title)s.%(ext)s'
                 }
 
-            
             with st.spinner("Downloading... ⏳"):
                 yt_dlp.YoutubeDL(options).download([url])
 
